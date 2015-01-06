@@ -1,10 +1,11 @@
-package com.softwaremill.reactive
+package com.softwaremill.reactive.complete
 
 import akka.persistence.PersistentActor
 import akka.stream.actor.ActorSubscriberMessage.OnNext
 import akka.stream.actor.{ActorSubscriber, MaxInFlightRequestStrategy}
+import com.softwaremill.reactive._
 
-class LargestDelayActor extends PersistentActor with ActorSubscriber with Logging {
+class LargestDelayActorComplete extends PersistentActor with ActorSubscriber with Logging {
   private var largestDelay: Option[FlightWithDelayPerMile] = None
   
   override def persistenceId = "flight-actor"

@@ -1,4 +1,4 @@
-package com.softwaremill.reactive
+package com.softwaremill.reactive.complete
 
 import java.net.InetSocketAddress
 
@@ -6,18 +6,15 @@ import akka.actor.ActorSystem
 import akka.stream.FlowMaterializer
 import akka.stream.scaladsl._
 import akka.util.ByteString
+import com.softwaremill.reactive._
 
 import scala.concurrent.duration._
 
-object Sender extends App with Logging {
+object SenderComplete extends App with Logging {
   implicit val system = ActorSystem()
   val serverConnection = StreamTcp().outgoingConnection(new InetSocketAddress("localhost", 9181))
 
   val getLines = () => scala.io.Source.fromFile("/Users/adamw/projects/reactive-akka-pres/data/2008.csv").getLines()
-
-  /*
-  val flow = linesSource.via(serverConnection.flow).to(logCompleteSink)
-   */
 
   val linesSource = Source(getLines).map { line => ByteString(line + "\n") }
   val logCompleteSink = Sink.onComplete(r => logger.info("Completed with: " + r))
