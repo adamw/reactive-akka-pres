@@ -1,0 +1,9 @@
+Reactive Manifesto 2.0
+
+* Responsive
+
+* Resilient
+
+* Elastic
+
+* Message Driven

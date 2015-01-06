@@ -1,0 +1,20 @@
+"basic" Akka:
+
+* toolkit & runtime for building highly concurrent, distributed,
+  resilient, message-driven apps on the JVM
+
+* light-weight actors, communicating via messages
+
+* errors handling in actors
+
+And much more:
+
+* Remoting
+* Cluster       <-
+* Persistance   <-
+* Streams       <-
+* HTTP
+
+
+
+
