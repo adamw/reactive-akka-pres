@@ -25,3 +25,5 @@ object FlightWithDelayPerMile {
 }
 
 object LogLargestDelay
+
+object GetReceiverAddress
