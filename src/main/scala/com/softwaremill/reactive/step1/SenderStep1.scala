@@ -8,6 +8,12 @@ import akka.stream.scaladsl._
 import akka.util.ByteString
 import com.softwaremill.reactive._
 
+/**
+ * - source: iterator from file (lazy iterator)
+ * - sink: just log
+ * - server connnection: req -> resp flow
+ * - *message driven*: materializer: actors
+ */
 object SenderStep1 extends App with Logging {
   implicit val system = ActorSystem()
   val serverConnection = StreamTcp().outgoingConnection(new InetSocketAddress("localhost", 9182))

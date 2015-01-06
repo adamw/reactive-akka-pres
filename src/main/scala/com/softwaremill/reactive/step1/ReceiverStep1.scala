@@ -9,6 +9,10 @@ import com.softwaremill.reactive._
 
 import scala.concurrent.Promise
 
+/**
+ * - flow from the client, transforming, no response
+ * - *elastic*: delay to see the backpressure
+ */
 class ReceiverStep1(receiverAddress: InetSocketAddress)(implicit val system: ActorSystem) extends Logging {
 
   def run(): Unit = {
