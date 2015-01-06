@@ -1,0 +1,7 @@
+A bit more needed for a full application:
+
+1. discovering where the receiver runs via Cluster Client
+
+2. re-connect on error (Futures from Streams)
+
+3. snapshots (Persistence)

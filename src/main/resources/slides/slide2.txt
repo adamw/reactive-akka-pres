@@ -1,0 +1,17 @@
+Reactive Manifesto 2.0
+
+* Responsive
+  - responds in a timely manner if at all possible
+
+* Resilient
+  - replication, containment, isolation, delegation
+  - components can fail independently
+
+* Elastic
+  - stays responsive under varying load
+  - increating/decreasing resources
+
+* Message Driven
+  - asynchronous communication
+  - loose coupling, location transparency
+  - load management, flow-control, back-pressure
