@@ -1,0 +1,9 @@
+Reactive manifesto traits:
+
+* Resilient: clustering, persistence
+
+* Elastic: streams
+
+* Message driven: actor communication
+
+==> Responsive

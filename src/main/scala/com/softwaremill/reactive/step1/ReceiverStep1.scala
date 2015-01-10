@@ -32,7 +32,7 @@ class ReceiverStep1(receiverAddress: InetSocketAddress)(implicit val system: Act
           Thread.sleep(500L)
         })
 
-      receiveSink.runWith(FutureSource(Promise().future))
+      FutureSource(Promise().future).to(receiveSink).run()
     }
   }
 }

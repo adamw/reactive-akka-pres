@@ -17,10 +17,10 @@
 
 * http://www.reactive-streams.org
 
-* http://www.reactive-streams.org
-
 * http://www.warski.org
 
 * https://github.com/adamw/reactive-akka-pres
+
+* https://github.com/adamw/reactmq
 
 * @adamwarski

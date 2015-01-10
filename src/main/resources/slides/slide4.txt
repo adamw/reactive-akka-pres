@@ -14,7 +14,3 @@ And much more:
 * Persistance   <-
 * Streams       <-
 * HTTP
-
-
-
-

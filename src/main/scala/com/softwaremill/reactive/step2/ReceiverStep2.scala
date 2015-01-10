@@ -34,7 +34,7 @@ class ReceiverStep2(receiverAddress: InetSocketAddress)(implicit val system: Act
         .mapConcat(FlightData(_).toList)
         .to(Sink(ActorSubscriber[FlightData](largestDelayActor)))
 
-      receiveSink.runWith(FutureSource(Promise().future))
+      FutureSource(Promise().future).to(receiveSink).run()
     }
 
     import system.dispatcher
