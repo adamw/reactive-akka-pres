@@ -3,11 +3,9 @@ package com.softwaremill.reactive.step1
 import java.net.InetSocketAddress
 
 import akka.actor.ActorSystem
-import akka.stream.FlowMaterializer
-import akka.stream.scaladsl.{ForeachSink, FutureSource, StreamTcp}
+import akka.stream.ActorFlowMaterializer
+import akka.stream.scaladsl.{ForeachSink, LazyEmptySource, StreamTcp}
 import com.softwaremill.reactive._
-
-import scala.concurrent.Promise
 
 /**
  * - flow from the client, transforming, no response
@@ -16,10 +14,10 @@ import scala.concurrent.Promise
 class ReceiverStep1(receiverAddress: InetSocketAddress)(implicit val system: ActorSystem) extends Logging {
 
   def run(): Unit = {
-    implicit val mat = FlowMaterializer()
+    implicit val mat = ActorFlowMaterializer()
 
     logger.info("Receiver: binding to " + receiverAddress)
-    StreamTcp().bind(receiverAddress).connections.foreach { conn =>
+    StreamTcp().bind(receiverAddress).connections.runForeach { conn =>
       logger.info(s"Receiver: sender connected (${conn.remoteAddress})")
 
       val receiveSink = conn.flow
@@ -32,7 +30,7 @@ class ReceiverStep1(receiverAddress: InetSocketAddress)(implicit val system: Act
           Thread.sleep(500L)
         })
 
-      FutureSource(Promise().future).to(receiveSink).run()
+      LazyEmptySource().to(receiveSink).run()
     }
   }
 }

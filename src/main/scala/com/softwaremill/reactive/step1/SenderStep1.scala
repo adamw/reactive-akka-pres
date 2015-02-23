@@ -3,7 +3,7 @@ package com.softwaremill.reactive.step1
 import java.net.InetSocketAddress
 
 import akka.actor.ActorSystem
-import akka.stream.FlowMaterializer
+import akka.stream.ActorFlowMaterializer
 import akka.stream.scaladsl._
 import akka.util.ByteString
 import com.softwaremill.reactive._
@@ -27,7 +27,7 @@ object SenderStep1 extends App with Logging {
     .via(serverConnection.flow)
     .to(logCompleteSink)
 
-  implicit val mat = FlowMaterializer()
+  implicit val mat = ActorFlowMaterializer()
   flow.run()
 }
 

@@ -2,14 +2,13 @@ package com.softwaremill.reactive.step2
 
 import java.net.InetSocketAddress
 
-import akka.actor.{Props, ActorSystem}
-import akka.stream.FlowMaterializer
+import akka.actor.{ActorSystem, Props}
+import akka.stream.ActorFlowMaterializer
 import akka.stream.actor.ActorSubscriber
-import akka.stream.scaladsl.{FutureSource, Sink, StreamTcp}
+import akka.stream.scaladsl.{LazyEmptySource, Sink, StreamTcp}
 import com.softwaremill.reactive._
 import com.softwaremill.reactive.complete.LargestDelayActorComplete
 
-import scala.concurrent.Promise
 import scala.concurrent.duration._
 
 /**
@@ -19,12 +18,12 @@ import scala.concurrent.duration._
 class ReceiverStep2(receiverAddress: InetSocketAddress)(implicit val system: ActorSystem) extends Logging {
 
   def run(): Unit = {
-    implicit val mat = FlowMaterializer()
+    implicit val mat = ActorFlowMaterializer()
 
     val largestDelayActor = system.actorOf(Props[LargestDelayActorComplete])
 
     logger.info("Receiver: binding to " + receiverAddress)
-    StreamTcp().bind(receiverAddress).connections.foreach { conn =>
+    StreamTcp().bind(receiverAddress).connections.runForeach { conn =>
       logger.info(s"Receiver: sender connected (${conn.remoteAddress})")
 
       val receiveSink = conn.flow
@@ -34,7 +33,7 @@ class ReceiverStep2(receiverAddress: InetSocketAddress)(implicit val system: Act
         .mapConcat(FlightData(_).toList)
         .to(Sink(ActorSubscriber[FlightData](largestDelayActor)))
 
-      FutureSource(Promise().future).to(receiveSink).run()
+      LazyEmptySource().to(receiveSink).run()
     }
 
     import system.dispatcher
