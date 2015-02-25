@@ -2,7 +2,7 @@ About me
 
 * coder @ [SoftwareMill](http://www.softwaremill.com)
 
-* open-source: MacWire, Envers, ElasticMQ, Veripacks
+* open-source: Supler, MacWire, Envers, ElasticMQ, Veripacks
 
 * [blog](http://www.warski.org)
 
