@@ -4,7 +4,7 @@ import java.net.InetSocketAddress
 
 import akka.actor.ActorSystem
 import akka.stream.ActorFlowMaterializer
-import akka.stream.scaladsl.{ForeachSink, LazyEmptySource, StreamTcp}
+import akka.stream.scaladsl._
 import com.softwaremill.reactive._
 
 /**
@@ -17,7 +17,7 @@ class ReceiverStep1(receiverAddress: InetSocketAddress)(implicit val system: Act
     implicit val mat = ActorFlowMaterializer()
 
     logger.info("Receiver: binding to " + receiverAddress)
-    StreamTcp().bind(receiverAddress).connections.runForeach { conn =>
+    StreamTcp().bind(receiverAddress).runForeach { conn =>
       logger.info(s"Receiver: sender connected (${conn.remoteAddress})")
 
       val receiveSink = conn.flow
@@ -25,12 +25,12 @@ class ReceiverStep1(receiverAddress: InetSocketAddress)(implicit val system: Act
         .filter(_.startsWith("20"))
         .map(_.split(","))
         .mapConcat(FlightData(_).toList)
-        .to(ForeachSink { flightData =>
+        .to(Sink.foreach { flightData =>
           logger.info("Got data: " + flightData)
           Thread.sleep(500L)
         })
 
-      LazyEmptySource().to(receiveSink).run()
+      Source.empty.to(receiveSink).run()
     }
   }
 }

@@ -18,7 +18,7 @@ object Sender extends App with Logging {
   val logCompleteSink = Sink.onComplete(r => logger.info("Completed with: " + r))
 
   val flow = linesSource
-    .via(serverConnection.flow)
+    .via(serverConnection)
     .to(logCompleteSink)
 
   implicit val mat = ActorFlowMaterializer()

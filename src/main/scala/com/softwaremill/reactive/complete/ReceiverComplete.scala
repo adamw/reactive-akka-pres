@@ -7,7 +7,7 @@ import akka.actor.{Actor, ActorSystem, PoisonPill, Props}
 import akka.contrib.pattern.ClusterSingletonManager
 import akka.stream.ActorFlowMaterializer
 import akka.stream.actor.ActorSubscriber
-import akka.stream.scaladsl.{LazyEmptySource, Sink, StreamTcp}
+import akka.stream.scaladsl.{Source, Sink, StreamTcp}
 import com.softwaremill.reactive._
 import com.typesafe.config.ConfigFactory
 
@@ -23,7 +23,7 @@ object ReceiverComplete {
       val largestDelayActor = system.actorOf(Props[LargestDelayActorComplete])
 
       logger.info("Receiver: binding to " + receiverAddress)
-      StreamTcp().bind(receiverAddress).connections.runForeach { conn =>
+      StreamTcp().bind(receiverAddress).runForeach { conn =>
         logger.info(s"Receiver: sender connected (${conn.remoteAddress})")
 
         val receiveSink = conn.flow
@@ -33,7 +33,7 @@ object ReceiverComplete {
           .mapConcat(FlightData(_).toList)
           .to(Sink(ActorSubscriber[FlightData](largestDelayActor)))
 
-        receiveSink.runWith(LazyEmptySource())
+        receiveSink.runWith(Source.empty)
       }
 
       import system.dispatcher

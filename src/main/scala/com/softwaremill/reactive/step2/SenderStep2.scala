@@ -22,18 +22,18 @@ object SenderStep2 extends App with Logging {
   val linesSource = Source(getLines).map { line => ByteString(line + "\n") }
   val logCompleteSink = Sink.onComplete(r => logger.info("Completed with: " + r))
 
-  val graph = FlowGraph { implicit b =>
-    import akka.stream.scaladsl.FlowGraphImplicits._
+  val graph = FlowGraph.closed() { implicit b =>
+    import FlowGraph.Implicits._
 
-    val broadcast = Broadcast[ByteString]
+    val broadcast = b.add(Broadcast[ByteString](2))
 
     val logWindowFlow = Flow[ByteString]
       .groupedWithin(10000, 1.seconds)
       .map(group => group.map(_.size).foldLeft(0)(_ + _))
       .map(groupSize => logger.info(s"Sent $groupSize bytes"))
 
-    linesSource ~> broadcast ~> serverConnection.flow ~> logCompleteSink
-                   broadcast ~> logWindowFlow         ~> Sink.ignore
+    linesSource ~> broadcast ~> serverConnection ~> logCompleteSink
+                   broadcast ~> logWindowFlow    ~> Sink.ignore
   }
 
   implicit val mat = ActorFlowMaterializer()
