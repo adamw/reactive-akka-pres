@@ -9,6 +9,7 @@ import akka.stream.ActorFlowMaterializer
 import akka.stream.actor.ActorSubscriber
 import akka.stream.scaladsl.{Source, Sink, StreamTcp}
 import com.softwaremill.reactive._
+import com.softwaremill.reactive.complete.ReceiverComplete.ReceiverClusterNode
 import com.typesafe.config.ConfigFactory
 
 import scala.concurrent.duration._
@@ -67,18 +68,18 @@ object ReceiverComplete {
 
     override def receive = emptyBehavior
   }
+}
 
-  object ClusteredReceiver1 extends App {
-    new ReceiverClusterNode(9171).run()
-  }
+object ClusteredReceiver1 extends App {
+  new ReceiverClusterNode(9171).run()
+}
 
-  object ClusteredReceiver2 extends App {
-    new ReceiverClusterNode(9172).run()
-  }
+object ClusteredReceiver2 extends App {
+  new ReceiverClusterNode(9172).run()
+}
 
-  object ClusteredReceiver3 extends App {
-    new ReceiverClusterNode(9173).run()
-  }
+object ClusteredReceiver3 extends App {
+  new ReceiverClusterNode(9173).run()
 }
 
 object SimpleReceiver extends App {
