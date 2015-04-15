@@ -27,7 +27,7 @@ class ReceiverStep1(receiverAddress: InetSocketAddress)(implicit val system: Act
         .mapConcat(FlightData(_).toList)
         .to(Sink.foreach { flightData =>
           logger.info("Got data: " + flightData)
-          Thread.sleep(500L)
+          Thread.sleep(100L)
         })
 
       Source.empty.to(receiveSink).run()
