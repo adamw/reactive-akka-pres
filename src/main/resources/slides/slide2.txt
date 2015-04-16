@@ -9,7 +9,7 @@ Reactive Manifesto 2.0
 
 * Elastic
   - stays responsive under varying load
-  - increating/decreasing resources
+  - increasing/decreasing resources
 
 * Message Driven
   - asynchronous communication
