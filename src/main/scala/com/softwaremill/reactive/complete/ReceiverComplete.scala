@@ -1,13 +1,11 @@
 package com.softwaremill.reactive.complete
 
-import java.net.InetSocketAddress
-
 import akka.actor.Actor.emptyBehavior
 import akka.actor.{Actor, ActorSystem, PoisonPill, Props}
 import akka.contrib.pattern.ClusterSingletonManager
 import akka.stream.ActorFlowMaterializer
 import akka.stream.actor.ActorSubscriber
-import akka.stream.scaladsl.{Source, Sink, StreamTcp}
+import akka.stream.scaladsl.{Tcp, Source, Sink}
 import com.softwaremill.reactive._
 import com.softwaremill.reactive.complete.ReceiverComplete.ReceiverClusterNode
 import com.typesafe.config.ConfigFactory
@@ -16,15 +14,15 @@ import scala.concurrent.duration._
 
 object ReceiverComplete {
 
-  class Receiver(receiverAddress: InetSocketAddress)(implicit val system: ActorSystem) extends Logging {
+  class Receiver(host: String, port: Int)(implicit val system: ActorSystem) extends Logging {
 
     def run(): Unit = {
       implicit val mat = ActorFlowMaterializer()
 
       val largestDelayActor = system.actorOf(Props[LargestDelayActorComplete])
 
-      logger.info("Receiver: binding to " + receiverAddress)
-      StreamTcp().bind(receiverAddress).runForeach { conn =>
+      logger.info(s"Receiver: binding to $host:$port")
+      Tcp().bind(host, port).runForeach { conn =>
         logger.info(s"Receiver: sender connected (${conn.remoteAddress})")
 
         val receiveSink = conn.flow
@@ -59,11 +57,9 @@ object ReceiverComplete {
   }
 
   class ReceiverNodeActor(clusterPort: Int) extends Actor {
-    val receiverAddress = new InetSocketAddress("localhost", clusterPort + 10)
-
     override def preStart() = {
       super.preStart()
-      new Receiver(receiverAddress)(context.system).run()
+      new Receiver("localhost", clusterPort + 10)(context.system).run()
     }
 
     override def receive = emptyBehavior
@@ -84,5 +80,5 @@ object ClusteredReceiver3 extends App {
 
 object SimpleReceiver extends App {
   implicit val system = ActorSystem()
-  new ReceiverComplete.Receiver(new InetSocketAddress("localhost", 9182)).run()
+  new ReceiverComplete.Receiver("localhost", 9182).run()
 }

@@ -15,7 +15,7 @@ class ParseLinesStage(separator: String, maximumLineBytes: Int) extends Stateful
   private var nextPossibleMatch = 0
 
   def initial = new State {
-    override def onPush(chunk: ByteString, ctx: Context[String]): Directive = {
+    override def onPush(chunk: ByteString, ctx: Context[String]) = {
       buffer ++= chunk
       if (buffer.size > maximumLineBytes) {
         println("XXX FAIL")
