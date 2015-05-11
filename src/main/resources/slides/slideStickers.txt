@@ -13,8 +13,6 @@
          * http://www.codebrag.com/
                                             *ScalaTimes*:
 
-   *Geecon conference*                      * Weekly Scala Newsletter
+                                            * Weekly Scala Newsletter
                                             * http://www.scalatimes.com/
-   * 13-15th May 2015                       * @scalatimes
-   * http://geecon.org
-   * Warsaw, Poland
+                                            * @scalatimes
