@@ -7,7 +7,7 @@ import com.softwaremill.reactive._
 
 class LargestDelayActorComplete extends PersistentActor with ActorSubscriber with Logging {
   private var largestDelay: Option[FlightWithDelayPerMile] = None
-
+  
   override def persistenceId = "flight-actor"
 
   private var inFlight = 0
@@ -18,13 +18,13 @@ class LargestDelayActorComplete extends PersistentActor with ActorSubscriber wit
 
   def receiveCommand = {
     case OnNext(data: FlightData) =>
-      FlightWithDelayPerMile(data).foreach { d =>
-        inFlight += 1
-        persistAsync(d) { _ =>
-          processDelayData(d)
-          inFlight -= 1
-        }
-      }
+       FlightWithDelayPerMile(data).foreach { d =>
+         inFlight += 1
+         persistAsync(d) { _ =>
+           processDelayData(d)
+           inFlight -= 1
+         }
+       }
     case LogLargestDelay => logger.info("Largest delay so far: " + largestDelay)
   }
 
@@ -36,3 +36,4 @@ class LargestDelayActorComplete extends PersistentActor with ActorSubscriber wit
     largestDelay = Some((d :: largestDelay.toList).max)
   }
 }
+
