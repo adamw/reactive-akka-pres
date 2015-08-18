@@ -66,6 +66,7 @@ object ReceiverComplete {
   }
 }
 
+//start with this one since sender port is 9171+10
 object ClusteredReceiver1 extends App {
   new ReceiverClusterNode(9171).run()
 }

@@ -16,6 +16,18 @@ class LargestDelayActorComplete extends PersistentActor with ActorSubscriber wit
     override def inFlightInternally = inFlight
   }
 
+  override def receive = {
+    case OnNext(data: FlightData) =>
+      FlightWithDelayPerMile(data).foreach { d =>
+        inFlight += 1
+        persistAsync(d) { _ =>
+          processDelayData(d)
+          inFlight -= 1
+        }
+      }
+    case LogLargestDelay => logger.info("Largest delay so far: " + largestDelay)
+  }
+
   def receiveCommand = {
     case OnNext(data: FlightData) =>
        FlightWithDelayPerMile(data).foreach { d =>
