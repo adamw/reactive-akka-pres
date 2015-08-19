@@ -10,9 +10,10 @@ import scala.concurrent.duration._
 
 object SenderComplete extends App with Logging {
   implicit val system = ActorSystem()
-  val serverConnection = Tcp().outgoingConnection("localhost", 9182)
+  val serverConnection = Tcp().outgoingConnection("localhost", 9181)
 
-  val getLines = () => scala.io.Source.fromFile("/Users/adamw/projects/reactive-akka-pres/data/2008.csv").getLines()
+  val projectDir = System.getProperty("user.dir")
+  val getLines = () => scala.io.Source.fromFile(s"$projectDir/data/2008.csv").getLines()
 
   val linesSource = Source(getLines).map { line => ByteString(line + "\n") }
   val logCompleteSink = Sink.onComplete(r => logger.info("Completed with: " + r))
